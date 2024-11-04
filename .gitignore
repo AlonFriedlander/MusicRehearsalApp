@@ -1,0 +1,46 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs/
+*.log
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+/coverage
+
+# Dependency directories
+/.pnp
+.pnp.js
+
+# dotenv environment variables
+.env
+
+# MongoDB
+/data/db
+
+# SQL
+*.sqlite
+*.db
+
+# Deployment files
+.DS_Store
+.vscode/
+dist/
+build/
+
+# React build files
+/build
+*.cache
+
+# Miscellaneous
+.idea/
+*.swp
+*.swo
+Thumbs.db
+
+# Mac OS
+.DS_Store
