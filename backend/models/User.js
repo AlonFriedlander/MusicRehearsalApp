@@ -12,7 +12,9 @@ const userSchema = new mongoose.Schema({
   },
   instrument: {
     type: String,
-    required: true,
+    required: function () {
+      return this.role === 'user'; // Required only if the role is 'user'
+    },
   },
   role: {
     type: String,
