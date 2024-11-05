@@ -32,13 +32,24 @@ function ResultsPage() {
     <div className="results-page">
       <div className="results-container">
         <h2 className="results-title">Search Results</h2>
-        <ul className="results-list">
-          {state.songs.map((song, index) => (
-            <li key={index} onClick={() => handleSelectSong(song)} className="results-item">
-              <p className="song-title">{song.title}</p>
-            </li>
-          ))}
-        </ul>
+        
+        {state.songs.length === 0 ? (
+          <div className="no-results">
+            <p>No songs found.</p>
+            <button className="try-again-button" onClick={() => navigate('/admin')}>
+              Try Again
+            </button>
+          </div>
+        ) : (
+          <ul className="results-list">
+            {state.songs.map((song, index) => (
+              <li key={index} onClick={() => handleSelectSong(song)} className="results-item">
+                <p className="song-title">{song.title}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+
         <button className="return-button" onClick={() => navigate('/')}>
           Return to Main Page
         </button>
