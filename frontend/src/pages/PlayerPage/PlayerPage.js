@@ -1,7 +1,7 @@
-// PlayerPage.js
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
+import './PlayerPage.css'; // Import the CSS file
 
 const socket = io('http://localhost:5000'); // Connect to the backend
 
@@ -31,6 +31,9 @@ function PlayerPage() {
   return (
     <div className="player-page">
       <h2>Waiting for next song</h2>
+      <button className="return-button" onClick={() => navigate('/')}>
+        Return to Main Page
+      </button>
     </div>
   );
 }

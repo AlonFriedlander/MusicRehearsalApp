@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './StartPage.css'; // Import the CSS file
+import './StartPage.css';
 
 function StartPage() {
   const navigate = useNavigate();
@@ -13,19 +13,16 @@ function StartPage() {
         
         <div className="button-group">
           <button className="primary-button" onClick={() => navigate('/signup')}>
-            Sign Up
+            Sign Up as User
           </button>
-          <button className="secondary-button" onClick={() => navigate('/login')}>
-            Login
-          </button>
-        </div>
-        
-        <div className="button-group">
           <button className="admin-button" onClick={() => navigate('/signup?role=admin')}>
             Sign Up as Admin
           </button>
-          <button className="admin-button" onClick={() => navigate('/login?role=admin')}>
-            Login as Admin
+        </div>
+
+        <div className="button-group-bottom">
+          <button className="secondary-button" onClick={() => navigate('/login')}>
+            Login
           </button>
         </div>
       </div>

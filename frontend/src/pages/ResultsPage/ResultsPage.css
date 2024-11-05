@@ -1,0 +1,96 @@
+/* ResultsPage.css */
+
+.results-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(to right, rgba(44, 62, 80, 0.8), rgba(52, 152, 219, 0.8)),
+                url('../../assets/band.webp') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    text-align: center;
+}
+
+.results-container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    width: 360px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.results-title {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.results-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.results-item {
+    padding: 15px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.results-item:hover {
+    background: rgba(52, 152, 219, 0.7);
+    transform: scale(1.02);
+}
+
+.song-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #fff;
+    margin: 0;
+}
+
+.return-button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    font-size: 1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    background: #e74c3c;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.return-button:hover {
+    background: #c0392b;
+    transform: scale(1.05);
+}
+
+@media (max-width: 500px) {
+    .results-container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .results-title {
+        font-size: 1.5em;
+    }
+
+    .song-title {
+        font-size: 1em;
+    }
+
+    .return-button {
+        font-size: 0.9em;
+        padding: 10px;
+    }
+}

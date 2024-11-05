@@ -1,0 +1,109 @@
+/* AdminPage.css */
+
+.admin-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(to right, rgba(44, 62, 80, 0.8), rgba(52, 152, 219, 0.8)),
+                url('../../assets/band.webp') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    text-align: center;
+}
+
+.admin-container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    width: 320px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.admin-title {
+    font-size: 2em;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.admin-description {
+    font-size: 1em;
+    margin-bottom: 20px;
+    color: #d0d7e3;
+}
+
+.admin-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-input {
+    padding: 12px;
+    font-size: 1em;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.6);
+}
+
+.admin-input:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 1);
+}
+
+.admin-search-button {
+    padding: 12px;
+    font-size: 1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    background: #3498db;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    margin-bottom: 15px;
+}
+
+.admin-search-button:hover {
+    background: #2980b9;
+    transform: scale(1.05);
+}
+
+.admin-return-button {
+    padding: 12px;
+    font-size: 1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    background: #e74c3c;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.admin-return-button:hover {
+    background: #c0392b;
+    transform: scale(1.05);
+}
+
+@media (max-width: 500px) {
+    .admin-container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .admin-title {
+        font-size: 1.5em;
+    }
+
+    .admin-description {
+        font-size: 0.9em;
+    }
+
+    .admin-search-button,
+    .admin-return-button {
+        padding: 10px;
+        font-size: 0.9em;
+    }
+}

@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import StartPage from './pages/StartPage/StartPage';
-import SignupPage from './pages/SignupPage';
-import LoginPage from './pages/LoginPage';
-import PlayerPage from './pages/PlayerPage';
-import AdminPage from './pages/AdminPage';
-import ResultsPage from './pages/ResultsPage';
-import LivePage from './pages/LivePage';
+import SignupPage from './pages/SignupPage/SignupPage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import PlayerPage from './pages/PlayerPage/PlayerPage';
+import AdminPage from './pages/AdminPage/AdminPage';
+import ResultsPage from './pages/ResultsPage/ResultsPage';
+import LivePage from './pages/LivePage/LivePage';
 
 function App() {
   return (

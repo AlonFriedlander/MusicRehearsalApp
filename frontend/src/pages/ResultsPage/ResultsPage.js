@@ -1,7 +1,7 @@
-// ResultsPage.js
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import './ResultsPage.css';
 
 function ResultsPage() {
   const { state } = useLocation();
@@ -22,7 +22,6 @@ function ResultsPage() {
         }
       );
 
-      // Navigate to LivePage
       navigate('/admin/live');
     } catch (error) {
       console.error('Error selecting song:', error);
@@ -31,14 +30,19 @@ function ResultsPage() {
 
   return (
     <div className="results-page">
-      <h2>Search Results</h2>
-      <ul>
-        {state.songs.map((song, index) => (
-          <li key={index} onClick={() => handleSelectSong(song)}>
-            <p>{song.title}</p>
-          </li>
-        ))}
-      </ul>
+      <div className="results-container">
+        <h2 className="results-title">Search Results</h2>
+        <ul className="results-list">
+          {state.songs.map((song, index) => (
+            <li key={index} onClick={() => handleSelectSong(song)} className="results-item">
+              <p className="song-title">{song.title}</p>
+            </li>
+          ))}
+        </ul>
+        <button className="return-button" onClick={() => navigate('/')}>
+          Return to Main Page
+        </button>
+      </div>
     </div>
   );
 }

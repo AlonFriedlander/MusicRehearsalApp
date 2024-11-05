@@ -1,0 +1,61 @@
+/* PlayerPage.css */
+
+.player-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), 
+                url('../../assets/excited_group.webp') no-repeat center center;
+    background-size: cover;
+    color: #fff;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.player-page h2 {
+    font-size: 2.5em;
+    color: #FFD700;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    animation: pulse 2s infinite;
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+}
+
+.return-button {
+    margin-top: 20px;
+    padding: 6px 12px !important; /* Smaller padding */
+    font-size: 0.85em !important; /* Slightly reduced font size */
+    font-weight: bold;
+    color: #fff !important;
+    background-color: #3498db !important;
+    border: none !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s, transform 0.2s;
+    max-width: 150px; /* Limit the width to make the button compact */
+}
+
+.return-button:hover {
+    background-color: #2980b9 !important;
+    transform: scale(1.05);
+}
+
+.return-button:active {
+    transform: scale(0.95);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

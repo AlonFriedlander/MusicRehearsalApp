@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
+import './LivePage.css'; // Import the CSS file for styles
 
 const socket = io('http://localhost:5000'); // Connect to the backend
 
@@ -20,7 +21,6 @@ function LivePage() {
   // Get token and user from sessionStorage
   const token = sessionStorage.getItem('token');
   const user = JSON.parse(sessionStorage.getItem('user'));
-
   const isAdmin = user?.role === 'admin';
   const isSinger = user?.instrument === 'vocals';
 
@@ -96,70 +96,33 @@ function LivePage() {
   }, [isAdmin, navigate]);
 
   return (
-    <div
-      className="live-page"
-      style={{ backgroundColor: '#000', color: '#FFF', padding: '20px' }}
-    >
-      <h2 style={{ fontSize: '2em', textAlign: 'center' }}>{song.title}</h2>
-      <p style={{ fontSize: '1.5em', textAlign: 'center' }}>
-        By {song.artist || 'Unknown Artist'}
-      </p>
-
-      <div
-        className="song-content"
-        ref={scrollRef}
-        style={{
-          fontSize: '1.2em',
-          maxHeight: '70vh',
-          overflowY: 'auto',
-          padding: '10px',
-          lineHeight: '1.5em',
-        }}
-      >
-        {song.lyrics && song.lyrics.length > 0 ? (
-          song.lyrics.map((line, lineIndex) => (
-            <div key={lineIndex} style={{ marginBottom: '10px' }}>
-              {line.map((word, wordIndex) => (
-                <span
-                  key={wordIndex}
-                  style={{ display: 'inline-block', marginRight: '8px' }}
-                >
-                  {isSinger || isAdmin
-                    ? word.lyrics
-                    : `${word.lyrics}${word.chords ? ` (${word.chords})` : ''}`}
-                </span>
-              ))}
-            </div>
-          ))
-        ) : (
-          <p>No lyrics available</p>
-        )}
+    <div className="live-page">
+      <div className="overlay">
+        <h2>{song.title}</h2>
+        <p className="artist-name">By {song.artist || 'Unknown Artist'}</p>
+        <div className="song-content" ref={scrollRef}>
+          {song.lyrics && song.lyrics.length > 0 ? (
+            song.lyrics.map((line, lineIndex) => (
+              <div key={lineIndex}>
+                {line.map((word, wordIndex) => (
+                  <span key={wordIndex}>
+                    {isSinger || isAdmin
+                      ? word.lyrics
+                      : `${word.lyrics}${word.chords ? ` (${word.chords})` : ''}`}{' '}
+                  </span>
+                ))}
+              </div>
+            ))
+          ) : (
+            <p>No lyrics available</p>
+          )}
+        </div>
       </div>
-
-      <button
-        onClick={handleToggleScroll}
-        style={{
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          padding: '10px',
-          fontSize: '1em',
-        }}
-      >
+      <button className="scroll-button" onClick={handleToggleScroll}>
         {isScrolling ? 'Stop Scrolling' : 'Start Scrolling'}
       </button>
-
       {isAdmin && (
-        <button
-          onClick={handleQuit}
-          style={{
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            padding: '10px',
-            fontSize: '1em',
-          }}
-        >
+        <button className="quit-button" onClick={handleQuit}>
           Quit
         </button>
       )}
