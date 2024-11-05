@@ -1,0 +1,28 @@
+[
+    [
+        { "lyrics": "When" },
+        { "lyrics": "I", "chords": "C" },
+        { "lyrics": "find" },
+        { "lyrics": "myself", "chords": "G" },
+        { "lyrics": "in" },
+        { "lyrics": "times", "chords": "Am" },
+        { "lyrics": "of" },
+        { "lyrics": "trouble" }
+    ],
+    [
+        { "lyrics": "Mother", "chords": "F" },
+        { "lyrics": "Mary", "chords": "C" },
+        { "lyrics": "comes", "chords": "G" },
+        { "lyrics": "to" },
+        { "lyrics": "me", "chords": "Am" }
+    ],
+    [
+        { "lyrics": "Speaking" },
+        { "lyrics": "words", "chords": "F" },
+        { "lyrics": "of", "chords": "C" },
+        { "lyrics": "wisdom", "chords": "G" },
+        { "lyrics": "let" },
+        { "lyrics": "it", "chords": "Am" },
+        { "lyrics": "be", "chords": "F" }
+    ]
+]

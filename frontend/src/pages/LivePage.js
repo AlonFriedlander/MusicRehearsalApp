@@ -1,42 +1,48 @@
+// LivePage.js
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import io from 'socket.io-client';
 
+const socket = io('http://localhost:5000'); // Connect to the backend
+
 function LivePage() {
-  const { state } = useLocation();
-  const [song, setSong] = useState(state?.song || { title: "No song selected", artist: "", lyrics: [] });
+  const [song, setSong] = useState({
+    title: 'No song selected',
+    artist: '',
+    lyrics: [],
+  });
   const navigate = useNavigate();
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollRef = useRef(null);
   const scrollIntervalRef = useRef(null);
 
-  const token = localStorage.getItem('token');
-  const user = JSON.parse(atob(token.split('.')[1]));
-  const isAdmin = user.role === 'admin';
-  const isSinger = user.instrument === 'vocals';
+  // Get token and user from sessionStorage
+  const token = sessionStorage.getItem('token');
+  const user = JSON.parse(sessionStorage.getItem('user'));
 
-  // Initialize socket connection within useEffect
+  const isAdmin = user?.role === 'admin';
+  const isSinger = user?.instrument === 'vocals';
+
+  // Fetch the latest song from the backend
   useEffect(() => {
-    const socket = io('http://localhost:5000'); // Initialize inside useEffect
-
-    console.log("Setting up socket listener for 'displaySong' event");
-
-    socket.on('displaySong', (songData) => {
-      console.log("Received 'displaySong' event with data:", songData);
-
-      // Parse songData if it’s a JSON string
-      const parsedSongData = typeof songData === 'string' ? JSON.parse(songData) : songData;
-      setSong(parsedSongData);
-
-      console.log("Updated song state in LivePage:", parsedSongData);
-    });
-
-    return () => {
-      console.log("Cleaning up 'displaySong' event listener");
-      socket.off('displaySong');
-      socket.disconnect();
+    const fetchSong = async () => {
+      try {
+        const response = await axios.get(
+          'http://localhost:5000/api/rehearsal/live/song',
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setSong(response.data.song);
+      } catch (error) {
+        console.error('Error fetching song:', error);
+        setSong({ title: 'No song selected', artist: '', lyrics: [] });
+      }
     };
-  }, []);
+
+    if (token) fetchSong();
+  }, [token]);
 
   useEffect(() => {
     if (isScrolling) {
@@ -56,15 +62,49 @@ function LivePage() {
     setIsScrolling((prev) => !prev);
   };
 
-  const handleQuit = () => {
-    navigate('/');
+  const handleQuit = async () => {
+    try {
+      const response = await axios.post(
+        'http://localhost:5000/api/rehearsal/admin/quit-session',
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log(response.data.message);
+      navigate('/admin'); // Navigate admin back to AdminPage
+    } catch (error) {
+      console.error('Error ending session:', error);
+    }
   };
 
+  // Listen for the sessionEnded event to navigate to appropriate pages
+  useEffect(() => {
+    const handleSessionEnd = () => {
+      if (isAdmin) {
+        navigate('/admin'); // Redirect admin to AdminPage
+      } else {
+        navigate('/player'); // Redirect user to PlayerPage
+      }
+    };
+
+    socket.on('sessionEnded', handleSessionEnd);
+
+    return () => {
+      socket.off('sessionEnded', handleSessionEnd);
+    };
+  }, [isAdmin, navigate]);
+
   return (
-    <div className="live-page" style={{ backgroundColor: '#000', color: '#FFF', padding: '20px' }}>
+    <div
+      className="live-page"
+      style={{ backgroundColor: '#000', color: '#FFF', padding: '20px' }}
+    >
       <h2 style={{ fontSize: '2em', textAlign: 'center' }}>{song.title}</h2>
-      <p style={{ fontSize: '1.5em', textAlign: 'center' }}>By {song.artist || "Unknown Artist"}</p>
-      
+      <p style={{ fontSize: '1.5em', textAlign: 'center' }}>
+        By {song.artist || 'Unknown Artist'}
+      </p>
+
       <div
         className="song-content"
         ref={scrollRef}
@@ -80,10 +120,13 @@ function LivePage() {
           song.lyrics.map((line, lineIndex) => (
             <div key={lineIndex} style={{ marginBottom: '10px' }}>
               {line.map((word, wordIndex) => (
-                <span key={wordIndex} style={{ display: 'inline-block', marginRight: '8px' }}>
-                  {isSinger
+                <span
+                  key={wordIndex}
+                  style={{ display: 'inline-block', marginRight: '8px' }}
+                >
+                  {isSinger || isAdmin
                     ? word.lyrics
-                    : `${word.lyrics} ${word.chords ? `(${word.chords})` : ''}`}
+                    : `${word.lyrics}${word.chords ? ` (${word.chords})` : ''}`}
                 </span>
               ))}
             </div>

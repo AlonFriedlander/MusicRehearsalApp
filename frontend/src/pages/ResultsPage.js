@@ -1,3 +1,4 @@
+// ResultsPage.js
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -8,21 +9,21 @@ function ResultsPage() {
 
   const handleSelectSong = async (song) => {
     try {
-      const token = localStorage.getItem('token');
-      console.log('Selected song:', song); // Log the selected song data
+      const token = sessionStorage.getItem('token');
+      console.log('Selected song:', song);
 
       await axios.post(
         'http://localhost:5000/api/rehearsal/admin/select-song',
         { song },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      // Navigate to LivePage and pass the song data
-      navigate('/admin/live', { state: { song } });
+      // Navigate to LivePage
+      navigate('/admin/live');
     } catch (error) {
       console.error('Error selecting song:', error);
     }

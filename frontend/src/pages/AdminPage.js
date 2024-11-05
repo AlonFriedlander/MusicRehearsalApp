@@ -10,8 +10,8 @@ function AdminPage() {
     e.preventDefault();
 
     try {
-      // Retrieve the token from localStorage
-      const token = localStorage.getItem('token');
+      // Retrieve the token from sessionStorage
+      const token = sessionStorage.getItem('token');
 
       // Send the request with the Authorization header
       const response = await axios.get(`http://localhost:5000/api/rehearsal/admin/search?q=${query}`, {

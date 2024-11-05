@@ -10,19 +10,30 @@ function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(null); // Reset any previous error message
+    setError(null);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
-        username,
-        password,
-      });
-      
-      // Save the token in localStorage or sessionStorage
-      localStorage.setItem('token', response.data.token);
+      const response = await axios.post(
+        'http://localhost:5000/api/auth/login',
+        {
+          username,
+          password,
+        }
+      );
 
-      console.log("Login successful:", response.data);
-      
+      // Log user data from the response to verify all fields
+      console.log('Received user data:', response.data.user);
+
+      // Store token and user data in sessionStorage
+      sessionStorage.setItem('token', response.data.token);
+      sessionStorage.setItem('user', JSON.stringify(response.data.user));
+
+      // Verify that sessionStorage was set correctly
+      console.log(
+        'Stored user in sessionStorage:',
+        JSON.parse(sessionStorage.getItem('user'))
+      );
+
       // Redirect based on user role
       if (response.data.user.role === 'admin') {
         navigate('/admin');
@@ -30,7 +41,10 @@ function LoginPage() {
         navigate('/player');
       }
     } catch (error) {
-      console.error('Login error:', error.response?.data?.message || error.message);
+      console.error(
+        'Login error:',
+        error.response?.data?.message || error.message
+      );
       setError(error.response?.data?.message || 'Server error');
     }
   };

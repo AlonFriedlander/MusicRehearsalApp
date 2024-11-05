@@ -15,17 +15,26 @@ function SignupPage() {
   const handleSignup = async (e) => {
     e.preventDefault();
 
+    // Construct signup data
+    const signupData = {
+      username,
+      password,
+      instrument: isAdmin ? null : instrument, // No instrument for admin
+      role: isAdmin ? 'admin' : 'user',
+    };
+
+    // Log signup data to verify
+    console.log('Signup data:', signupData);
+
     try {
-      await axios.post('http://localhost:5000/api/auth/register', {
-        username,
-        password,
-        instrument: isAdmin ? null : instrument, // No instrument for admin
-        role: isAdmin ? 'admin' : 'user',
-      });
-      console.log("Signup successful");
+      await axios.post('http://localhost:5000/api/auth/register', signupData);
+      console.log('Signup successful');
       navigate('/login'); // Redirect to the login page after successful signup
     } catch (error) {
-      console.error('Signup error:', error.response?.data?.message || error.message);
+      console.error(
+        'Signup error:',
+        error.response?.data?.message || error.message
+      );
     }
   };
 
