@@ -40,12 +40,15 @@ function LoginPage() {
         const token = sessionStorage.getItem('token');
         if (!token) return;
 
-        const response = await axios.get('http://localhost:5000/api/auth/validate-token', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          'http://localhost:5000/api/auth/validate-token',
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         if (response.status === 200) {
           sessionStorage.setItem('user', JSON.stringify(response.data.user));
-          console.log(response.data)
+          console.log(response.data);
           if (response.data.user.role === 'admin') {
             navigate('/admin');
           } else {
@@ -55,9 +58,9 @@ function LoginPage() {
       } catch (error) {
         console.error('Token validation error:', error);
       }
-    }
+    };
     tryToLoginWithToken();
-  }, [])
+  }, [navigate]);
 
   return (
     <div className="login-page">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
@@ -12,8 +12,7 @@ function LivePage() {
     lyrics: [],
   });
 
-  const {state} = useLocation()
-
+  const { state } = useLocation();
   const navigate = useNavigate();
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollRef = useRef(null);
@@ -27,9 +26,18 @@ function LivePage() {
   // Token validation status
   const isValidToken = useValidateToken();
 
+  // Define handleSessionEnd with useCallback to avoid re-creating it on each render
+  const handleSessionEnd = useCallback(() => {
+    if (isAdmin) {
+      navigate('/admin'); // Redirect admin to AdminPage
+    } else {
+      navigate('/player'); // Redirect user to PlayerPage
+    }
+  }, [isAdmin, navigate]);
+
   // Fetch song and connect socket after validating the token
   useEffect(() => {
-    console.log(state)
+    console.log(state);
     if (isValidToken === null) return; // Wait for token validation
     if (!isValidToken) {
       navigate('/login'); // Redirect if token is invalid
@@ -39,10 +47,13 @@ function LivePage() {
     // Token is valid, fetch song and initialize socket connection
     const fetchSong = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/rehearsal/live/song', {
-          headers: { Authorization: `Bearer ${token}` },
-          params: { hash: state.hash },
-        });
+        const response = await axios.get(
+          'http://localhost:5000/api/rehearsal/live/song',
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { hash: state.hash },
+          }
+        );
         setSong(response.data.song);
       } catch (error) {
         console.error('Error fetching song:', error);
@@ -62,7 +73,7 @@ function LivePage() {
       newSocket.off('sessionEnded', handleSessionEnd);
       newSocket.disconnect();
     };
-  }, [isValidToken, navigate, token, state]);
+  }, [isValidToken, navigate, token, state, handleSessionEnd]);
 
   useEffect(() => {
     if (isScrolling) {
@@ -98,14 +109,6 @@ function LivePage() {
     }
   };
 
-  const handleSessionEnd = () => {
-    if (isAdmin) {
-      navigate('/admin'); // Redirect admin to AdminPage
-    } else {
-      navigate('/player'); // Redirect user to PlayerPage
-    }
-  };
-
   return (
     <div className="live-page">
       <div className="overlay">
@@ -119,7 +122,9 @@ function LivePage() {
                   <span key={wordIndex}>
                     {isSinger || isAdmin
                       ? word.lyrics
-                      : `${word.lyrics}${word.chords ? ` (${word.chords})` : ''}`}{' '}
+                      : `${word.lyrics}${
+                          word.chords ? ` (${word.chords})` : ''
+                        }`}{' '}
                   </span>
                 ))}
               </div>
