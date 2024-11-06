@@ -14,11 +14,6 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-// app.use(cors({
-//   origin: 'https://musicrehearsalapp.netlify.app', // Your Netlify frontend URL
-//   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Include any other HTTP methods you need
-//   credentials: true, // If you need to send cookies or HTTP authentication
-// }));
 app.use(cors());
 
 app.use('/api/auth', authRoutes);
