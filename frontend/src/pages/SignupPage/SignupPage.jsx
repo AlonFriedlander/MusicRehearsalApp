@@ -25,7 +25,7 @@ function SignupPage() {
     };
 
     try {
-      await axios.post('http://localhost:5000/api/auth/register', signupData);
+      await axios.post('https://jamoveo-backend-4lh4.onrender.com/api/auth/register', signupData);
       console.log('Signup successful');
       navigate('/login'); // Redirect to the login page after successful signup
     } catch (error) {

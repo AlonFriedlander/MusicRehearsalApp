@@ -48,7 +48,7 @@ function LivePage() {
     const fetchSong = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:5000/api/rehearsal/live/song',
+          'https://jamoveo-backend-4lh4.onrender.com/api/rehearsal/live/song',
           {
             headers: { Authorization: `Bearer ${token}` },
             params: { hash: state.hash },
@@ -63,7 +63,7 @@ function LivePage() {
 
     fetchSong();
 
-    const newSocket = io('http://localhost:5000', {
+    const newSocket = io('https://jamoveo-backend-4lh4.onrender.com/', {
       extraHeaders: { Authorization: `Bearer ${token}` },
     });
 
@@ -96,7 +96,7 @@ function LivePage() {
   const handleQuit = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/rehearsal/admin/quit-session',
+        'https://jamoveo-backend-4lh4.onrender.com/api/rehearsal/admin/quit-session',
         {},
         {
           headers: { Authorization: `Bearer ${token}` },

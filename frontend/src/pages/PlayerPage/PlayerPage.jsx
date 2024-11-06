@@ -17,7 +17,7 @@ function PlayerPage() {
     }
 
     // Proceed with socket connection if token is valid
-    const socket = io("http://localhost:5000", {
+    const socket = io("https://jamoveo-backend-4lh4.onrender.com/", {
       extraHeaders: {
         authorization: `Bearer ${token}`, // Send the token to the backend
       },

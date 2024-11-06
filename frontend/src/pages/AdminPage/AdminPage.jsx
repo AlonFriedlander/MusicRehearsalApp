@@ -15,7 +15,7 @@ function AdminPage() {
 
     try {
       const token = sessionStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5000/api/rehearsal/admin/search?q=${query}`, {
+      const response = await axios.get(`https://jamoveo-backend-4lh4.onrender.com/api/rehearsal/admin/search?q=${query}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
