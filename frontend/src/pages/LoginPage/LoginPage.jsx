@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
@@ -31,6 +31,33 @@ function LoginPage() {
       setError(error.response?.data?.message || 'Server error');
     }
   };
+
+  useEffect(() => {
+    // const token = sessionStorage.getItem('token');
+    // if (token) {
+    const tryToLoginWithToken = async () => {
+      try {
+        const token = sessionStorage.getItem('token');
+        if (!token) return;
+
+        const response = await axios.get('http://localhost:5000/api/auth/validate-token', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.status === 200) {
+          sessionStorage.setItem('user', JSON.stringify(response.data.user));
+          console.log(response.data)
+          if (response.data.user.role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/player');
+          }
+        }
+      } catch (error) {
+        console.error('Token validation error:', error);
+      }
+    }
+    tryToLoginWithToken();
+  }, [])
 
   return (
     <div className="login-page">

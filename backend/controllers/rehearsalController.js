@@ -1,6 +1,7 @@
 import Song from '../models/Song.js';
 
 let latestSong = null;
+let songHash = null;
 
 export const searchSongs = async (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ message: 'Access denied' });
@@ -18,11 +19,15 @@ export const selectSong = async (req, res) => {
   if (!selectedSong) return res.status(404).json({ message: 'Song not found' });
 
   latestSong = selectedSong;
-  req.app.get('io').emit('navigateToLivePage');
-  res.json({ message: 'Song selected successfully' });
+  const hash = crypto.randomUUID();
+  songHash = hash;
+  req.app.get('io').emit('navigateToLivePage', { hash });
+  res.json({ message: 'Song selected successfully', hash });
 };
 
 export const getLiveSong = (req, res) => {
+  const { hash } = req.query;
+  if (hash !== songHash) return res.status(403).json({ message: 'Access denied' });
   if (!latestSong) return res.status(404).json({ message: 'No song selected' });
   res.json({ song: latestSong });
 };

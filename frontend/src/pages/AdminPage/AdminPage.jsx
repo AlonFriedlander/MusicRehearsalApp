@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './AdminPage.css';
+import useValidateToken from '../../hooks/useValidateToken';
 
 function AdminPage() {
+  useValidateToken();
+
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
 

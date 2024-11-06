@@ -1,11 +1,9 @@
-// LivePage.js
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
+import useValidateToken from '../../hooks/useValidateToken';
 import './LivePage.css'; // Import the CSS file for styles
-
-const socket = io('http://localhost:5000'); // Connect to the backend
 
 function LivePage() {
   const [song, setSong] = useState({
@@ -13,27 +11,38 @@ function LivePage() {
     artist: '',
     lyrics: [],
   });
+
+  const {state} = useLocation()
+
   const navigate = useNavigate();
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollRef = useRef(null);
   const scrollIntervalRef = useRef(null);
 
-  // Get token and user from sessionStorage
   const token = sessionStorage.getItem('token');
   const user = JSON.parse(sessionStorage.getItem('user'));
   const isAdmin = user?.role === 'admin';
   const isSinger = user?.instrument === 'vocals';
 
-  // Fetch the latest song from the backend
+  // Token validation status
+  const isValidToken = useValidateToken();
+
+  // Fetch song and connect socket after validating the token
   useEffect(() => {
+    console.log(state)
+    if (isValidToken === null) return; // Wait for token validation
+    if (!isValidToken) {
+      navigate('/login'); // Redirect if token is invalid
+      return;
+    }
+
+    // Token is valid, fetch song and initialize socket connection
     const fetchSong = async () => {
       try {
-        const response = await axios.get(
-          'http://localhost:5000/api/rehearsal/live/song',
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await axios.get('http://localhost:5000/api/rehearsal/live/song', {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { hash: state.hash },
+        });
         setSong(response.data.song);
       } catch (error) {
         console.error('Error fetching song:', error);
@@ -41,8 +50,19 @@ function LivePage() {
       }
     };
 
-    if (token) fetchSong();
-  }, [token]);
+    fetchSong();
+
+    const newSocket = io('http://localhost:5000', {
+      extraHeaders: { Authorization: `Bearer ${token}` },
+    });
+
+    newSocket.on('sessionEnded', handleSessionEnd);
+
+    return () => {
+      newSocket.off('sessionEnded', handleSessionEnd);
+      newSocket.disconnect();
+    };
+  }, [isValidToken, navigate, token, state]);
 
   useEffect(() => {
     if (isScrolling) {
@@ -78,22 +98,13 @@ function LivePage() {
     }
   };
 
-  // Listen for the sessionEnded event to navigate to appropriate pages
-  useEffect(() => {
-    const handleSessionEnd = () => {
-      if (isAdmin) {
-        navigate('/admin'); // Redirect admin to AdminPage
-      } else {
-        navigate('/player'); // Redirect user to PlayerPage
-      }
-    };
-
-    socket.on('sessionEnded', handleSessionEnd);
-
-    return () => {
-      socket.off('sessionEnded', handleSessionEnd);
-    };
-  }, [isAdmin, navigate]);
+  const handleSessionEnd = () => {
+    if (isAdmin) {
+      navigate('/admin'); // Redirect admin to AdminPage
+    } else {
+      navigate('/player'); // Redirect user to PlayerPage
+    }
+  };
 
   return (
     <div className="live-page">

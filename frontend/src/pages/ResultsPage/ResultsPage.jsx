@@ -2,8 +2,11 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './ResultsPage.css';
+import useValidateToken from '../../hooks/useValidateToken';
 
 function ResultsPage() {
+  useValidateToken();
+  
   const { state } = useLocation();
   const navigate = useNavigate();
 
@@ -12,7 +15,7 @@ function ResultsPage() {
       const token = sessionStorage.getItem('token');
       console.log('Selected song:', song);
 
-      await axios.post(
+      const res = await axios.post(
         'http://localhost:5000/api/rehearsal/admin/select-song',
         { song },
         {
@@ -22,7 +25,7 @@ function ResultsPage() {
         }
       );
 
-      navigate('/admin/live');
+      navigate('/admin/live', { state: { hash: res.data.hash } });
     } catch (error) {
       console.error('Error selecting song:', error);
     }
@@ -33,7 +36,7 @@ function ResultsPage() {
       <div className="results-container">
         <h2 className="results-title">Search Results</h2>
         
-        {state.songs.length === 0 ? (
+        {!state?.songs || state.songs.length === 0 ? (
           <div className="no-results">
             <p>No songs found.</p>
             <button className="try-again-button" onClick={() => navigate('/admin')}>
