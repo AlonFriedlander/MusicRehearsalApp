@@ -15,7 +15,7 @@ function LoginPage() {
 
     try {
       const response = await axios.post(
-        'https://jamoveo-backend-4lh4.onrender.com/api/auth/login',
+        `${process.env.REACT_APP_BACKEND_URL}/api/auth/login`,
         { username, password }
       );
 
@@ -41,7 +41,7 @@ function LoginPage() {
         if (!token) return;
 
         const response = await axios.get(
-          'https://jamoveo-backend-4lh4.onrender.com/api/auth/validate-token',
+          `${process.env.REACT_APP_BACKEND_URL}/api/auth/validate-token`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

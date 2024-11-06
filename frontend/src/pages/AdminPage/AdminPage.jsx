@@ -15,15 +15,18 @@ function AdminPage() {
 
     try {
       const token = sessionStorage.getItem('token');
-      const response = await axios.get(`https://jamoveo-backend-4lh4.onrender.com/api/rehearsal/admin/search?q=${query}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/api/rehearsal/admin/search?q=${query}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       navigate('/admin/results', { state: { songs: response.data.songs } });
     } catch (error) {
-      console.error("Search error:", error);
+      console.error('Search error:', error);
     }
   };
 
@@ -31,7 +34,9 @@ function AdminPage() {
     <div className="admin-page">
       <div className="admin-container">
         <h2 className="admin-title">Search for a Song</h2>
-        <p className="admin-description">Enter a song name or artist below to begin.</p>
+        <p className="admin-description">
+          Enter a song name or artist below to begin.
+        </p>
 
         <form onSubmit={handleSearch} className="admin-form">
           <input
@@ -42,7 +47,9 @@ function AdminPage() {
             className="admin-input"
             required
           />
-          <button type="submit" className="admin-search-button">Search</button>
+          <button type="submit" className="admin-search-button">
+            Search
+          </button>
         </form>
 
         <button className="admin-return-button" onClick={() => navigate('/')}>

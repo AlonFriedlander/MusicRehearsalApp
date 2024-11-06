@@ -6,7 +6,7 @@ import useValidateToken from '../../hooks/useValidateToken';
 
 function ResultsPage() {
   useValidateToken();
-  
+
   const { state } = useLocation();
   const navigate = useNavigate();
 
@@ -16,7 +16,7 @@ function ResultsPage() {
       console.log('Selected song:', song);
 
       const res = await axios.post(
-        'https://jamoveo-backend-4lh4.onrender.com/api/rehearsal/admin/select-song',
+        `${process.env.REACT_APP_BACKEND_URL}/api/rehearsal/admin/select-song`,
         { song },
         {
           headers: {
@@ -35,18 +35,25 @@ function ResultsPage() {
     <div className="results-page">
       <div className="results-container">
         <h2 className="results-title">Search Results</h2>
-        
+
         {!state?.songs || state.songs.length === 0 ? (
           <div className="no-results">
             <p>No songs found.</p>
-            <button className="try-again-button" onClick={() => navigate('/admin')}>
+            <button
+              className="try-again-button"
+              onClick={() => navigate('/admin')}
+            >
               Try Again
             </button>
           </div>
         ) : (
           <ul className="results-list">
             {state.songs.map((song, index) => (
-              <li key={index} onClick={() => handleSelectSong(song)} className="results-item">
+              <li
+                key={index}
+                onClick={() => handleSelectSong(song)}
+                className="results-item"
+              >
                 <p className="song-title">{song.title}</p>
               </li>
             ))}
