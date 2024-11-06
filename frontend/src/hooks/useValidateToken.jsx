@@ -11,7 +11,7 @@ const useValidateToken = () => {
       try {
         const token = sessionStorage.getItem('token');
         const response = await axios.get(
-          'http://localhost:5000/api/auth/validate-token',
+          `${process.env.REACT_APP_BACKEND_URL}/api/auth/validate-token`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
