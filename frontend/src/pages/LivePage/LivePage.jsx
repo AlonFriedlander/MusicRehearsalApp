@@ -5,18 +5,35 @@ import io from 'socket.io-client';
 import useValidateToken from '../../hooks/useValidateToken';
 import './LivePage.css'; // Import the CSS file for styles
 
+function ToggleSwitch({ isOn, handleToggle }) {
+  return (
+    <div className="toggle-switch-container">
+      <label className="toggle-label">
+        {isOn ? 'Scrolling' : 'Not Scrolling'}
+      </label>
+      <div
+        className={`toggle-switch ${isOn ? 'on' : 'off'}`}
+        onClick={handleToggle}
+      >
+        <div className={`toggle-switch-slider ${isOn ? 'on' : 'off'}`}></div>
+      </div>
+    </div>
+  );
+}
+
 function LivePage() {
   const [song, setSong] = useState({
     title: 'No song selected',
     artist: '',
-    lyrics: [],
+    lyrics: [], // Assuming each element in lyrics is an array of objects
   });
-
+  const [scrollSpeed, setScrollSpeed] = useState(5); // Default speed in seconds per line
   const { state } = useLocation();
   const navigate = useNavigate();
-  const [isScrolling, setIsScrolling] = useState(false);
-  const scrollRef = useRef(null);
-  const scrollIntervalRef = useRef(null);
+  const [currentLineIndex, setCurrentLineIndex] = useState(0);
+  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+  const [scrollCompleted, setScrollCompleted] = useState(false);
+  const autoScrollIntervalRef = useRef(null);
 
   const token = sessionStorage.getItem('token');
   const user = JSON.parse(sessionStorage.getItem('user'));
@@ -26,25 +43,21 @@ function LivePage() {
   // Token validation status
   const isValidToken = useValidateToken();
 
-  // Define handleSessionEnd with useCallback to avoid re-creating it on each render
   const handleSessionEnd = useCallback(() => {
     if (isAdmin) {
-      navigate('/admin'); // Redirect admin to AdminPage
+      navigate('/admin');
     } else {
-      navigate('/player'); // Redirect user to PlayerPage
+      navigate('/player');
     }
   }, [isAdmin, navigate]);
 
-  // Fetch song and connect socket after validating the token
   useEffect(() => {
-    console.log(state);
-    if (isValidToken === null) return; // Wait for token validation
+    if (isValidToken === null) return;
     if (!isValidToken) {
-      navigate('/login'); // Redirect if token is invalid
+      navigate('/login');
       return;
     }
 
-    // Token is valid, fetch song and initialize socket connection
     const fetchSong = async () => {
       try {
         const response = await axios.get(
@@ -75,22 +88,33 @@ function LivePage() {
     };
   }, [isValidToken, navigate, token, state, handleSessionEnd]);
 
+  // Auto-scroll logic
   useEffect(() => {
-    if (isScrolling) {
-      scrollIntervalRef.current = setInterval(() => {
-        if (scrollRef.current) {
-          scrollRef.current.scrollTop += 1;
-        }
-      }, 50);
+    if (isAutoScrolling) {
+      autoScrollIntervalRef.current = setInterval(() => {
+        setCurrentLineIndex((prevIndex) => {
+          if (prevIndex < song.lyrics.length - 1) {
+            return prevIndex + 1;
+          } else {
+            clearInterval(autoScrollIntervalRef.current);
+            setScrollCompleted(true);
+            return prevIndex;
+          }
+        });
+      }, scrollSpeed * 1000); // Dynamic speed based on input (in milliseconds)
     } else {
-      clearInterval(scrollIntervalRef.current);
+      clearInterval(autoScrollIntervalRef.current);
     }
 
-    return () => clearInterval(scrollIntervalRef.current);
-  }, [isScrolling]);
+    return () => clearInterval(autoScrollIntervalRef.current);
+  }, [isAutoScrolling, song.lyrics.length, scrollSpeed]);
 
-  const handleToggleScroll = () => {
-    setIsScrolling((prev) => !prev);
+  const handleToggleAutoScroll = () => {
+    setIsAutoScrolling((prev) => !prev);
+    setScrollCompleted(false);
+    if (!isAutoScrolling) {
+      setCurrentLineIndex(0); // Reset to the start when beginning auto-scroll
+    }
   };
 
   const handleQuit = async () => {
@@ -103,7 +127,7 @@ function LivePage() {
         }
       );
       console.log(response.data.message);
-      navigate('/admin'); // Navigate admin back to AdminPage
+      navigate('/admin');
     } catch (error) {
       console.error('Error ending session:', error);
     }
@@ -114,11 +138,11 @@ function LivePage() {
       <div className="overlay">
         <h2>{song.title}</h2>
         <p className="artist-name">By {song.artist || 'Unknown Artist'}</p>
-        <div className="song-content" ref={scrollRef}>
+        <div className="song-content">
           {song.lyrics && song.lyrics.length > 0 ? (
-            song.lyrics.map((line, lineIndex) => (
-              <div key={lineIndex}>
-                {line.map((word, wordIndex) => (
+            isAutoScrolling ? (
+              <div>
+                {song.lyrics[currentLineIndex].map((word, wordIndex) => (
                   <span key={wordIndex}>
                     {isSinger || isAdmin
                       ? word.lyrics
@@ -128,15 +152,47 @@ function LivePage() {
                   </span>
                 ))}
               </div>
-            ))
+            ) : (
+              <div>
+                {song.lyrics.map((line, lineIndex) => (
+                  <div key={lineIndex}>
+                    {line.map((word, wordIndex) => (
+                      <span key={wordIndex}>
+                        {isSinger || isAdmin
+                          ? word.lyrics
+                          : `${word.lyrics}${
+                              word.chords ? ` (${word.chords})` : ''
+                            }`}{' '}
+                      </span>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )
           ) : (
             <p>No lyrics available</p>
           )}
         </div>
       </div>
-      <button className="scroll-button" onClick={handleToggleScroll}>
-        {isScrolling ? 'Stop Scrolling' : 'Start Scrolling'}
-      </button>
+      <div className="control-panel">
+        <div className="speed-input">
+          <label htmlFor="scrollSpeed">Scroll Speed (seconds per line): </label>
+          <input
+            type="number"
+            id="scrollSpeed"
+            min="1"
+            value={scrollSpeed}
+            onChange={(e) => setScrollSpeed(Number(e.target.value))}
+          />
+        </div>
+        <ToggleSwitch
+          isOn={isAutoScrolling}
+          handleToggle={handleToggleAutoScroll}
+        />
+      </div>
+      {scrollCompleted && (
+        <p className="scroll-completed">End of song reached.</p>
+      )}
       {isAdmin && (
         <button className="quit-button" onClick={handleQuit}>
           Quit
