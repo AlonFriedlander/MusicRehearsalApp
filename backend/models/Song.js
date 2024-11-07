@@ -7,4 +7,6 @@ const SongSchema = new mongoose.Schema({
   filename: { type: String, required: true } // To reference original file if needed
 });
 
+SongSchema.index({title: 1}); // Index for faster queries
+
 export default mongoose.model('Song', SongSchema);

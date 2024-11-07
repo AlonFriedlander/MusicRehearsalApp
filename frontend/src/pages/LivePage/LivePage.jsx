@@ -1,21 +1,22 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import io from 'socket.io-client';
-import useValidateToken from '../../hooks/useValidateToken';
-import './LivePage.css'; // Import the CSS file for styles
+import axios from "axios";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import io from "socket.io-client";
+import useValidateToken from "../../hooks/useValidateToken";
+import "./LivePage.css"; // Import the CSS file for styles
 
 function ToggleSwitch({ isOn, handleToggle }) {
   return (
     <div className="toggle-switch-container">
       <label className="toggle-label">
-        {isOn ? 'Scrolling' : 'Not Scrolling'}
+        {isOn ? "Scrolling" : "Not Scrolling"}
       </label>
       <div
-        className={`toggle-switch ${isOn ? 'on' : 'off'}`}
+        className={`toggle-switch ${isOn ? "on" : "off"}`}
         onClick={handleToggle}
       >
-        <div className={`toggle-switch-slider ${isOn ? 'on' : 'off'}`}></div>
+        <div className={`toggle-switch-slider ${isOn ? "on" : "off"}`}></div>
       </div>
     </div>
   );
@@ -23,8 +24,8 @@ function ToggleSwitch({ isOn, handleToggle }) {
 
 function LivePage() {
   const [song, setSong] = useState({
-    title: 'No song selected',
-    artist: '',
+    title: "No song selected",
+    artist: "",
     lyrics: [], // Assuming each element in lyrics is an array of objects
   });
   const [scrollSpeed, setScrollSpeed] = useState(5); // Default speed in seconds per line
@@ -35,30 +36,33 @@ function LivePage() {
   const [scrollCompleted, setScrollCompleted] = useState(false);
   const autoScrollIntervalRef = useRef(null);
 
-  const token = sessionStorage.getItem('token');
-  const user = JSON.parse(sessionStorage.getItem('user'));
-  const isAdmin = user?.role === 'admin';
-  const isSinger = user?.instrument === 'vocals';
+  const token = sessionStorage.getItem("token");
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  const isAdmin = user?.role === "admin";
+  const isSinger = user?.instrument === "vocals";
+  const location = useLocation();
+  const [isFetchingSong, setIsFetchingSong] = useState(true);
 
   // Token validation status
-  const isValidToken = useValidateToken();
+  const isValidToken = useValidateToken(location.pathname.includes("admin"));
 
   const handleSessionEnd = useCallback(() => {
     if (isAdmin) {
-      navigate('/admin');
+      navigate("/admin");
     } else {
-      navigate('/player');
+      navigate("/player");
     }
   }, [isAdmin, navigate]);
 
   useEffect(() => {
     if (isValidToken === null) return;
     if (!isValidToken) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
 
     const fetchSong = async () => {
+      setIsFetchingSong(true);
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_BACKEND_URL}/api/rehearsal/live/song`,
@@ -69,8 +73,13 @@ function LivePage() {
         );
         setSong(response.data.song);
       } catch (error) {
-        console.error('Error fetching song:', error);
-        setSong({ title: 'No song selected', artist: '', lyrics: [] });
+        console.error("Error fetching song:", error);
+        toast.error("Error fetching song, please go back", {
+          position: "bottom-left",
+        });
+        setSong({ title: "No song selected", artist: "", lyrics: [] });
+      } finally {
+        setIsFetchingSong(false);
       }
     };
 
@@ -80,10 +89,10 @@ function LivePage() {
       extraHeaders: { Authorization: `Bearer ${token}` },
     });
 
-    newSocket.on('sessionEnded', handleSessionEnd);
+    newSocket.on("sessionEnded", handleSessionEnd);
 
     return () => {
-      newSocket.off('sessionEnded', handleSessionEnd);
+      newSocket.off("sessionEnded", handleSessionEnd);
       newSocket.disconnect();
     };
   }, [isValidToken, navigate, token, state, handleSessionEnd]);
@@ -126,10 +135,9 @@ function LivePage() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log(response.data.message);
-      navigate('/admin');
+      navigate("/admin");
     } catch (error) {
-      console.error('Error ending session:', error);
+      console.error("Error ending session:", error);
     }
   };
 
@@ -137,7 +145,7 @@ function LivePage() {
     <div className="live-page">
       <div className="overlay">
         <h2>{song.title}</h2>
-        <p className="artist-name">By {song.artist || 'Unknown Artist'}</p>
+        <p className="artist-name">By {song.artist || "Unknown Artist"}</p>
         <div className="song-content">
           {song.lyrics && song.lyrics.length > 0 ? (
             isAutoScrolling ? (
@@ -147,22 +155,22 @@ function LivePage() {
                     {isSinger || isAdmin
                       ? word.lyrics
                       : `${word.lyrics}${
-                          word.chords ? ` (${word.chords})` : ''
-                        }`}{' '}
+                          word.chords ? ` (${word.chords})` : ""
+                        }`}{" "}
                   </span>
                 ))}
               </div>
             ) : (
               <div>
                 {song.lyrics.map((line, lineIndex) => (
-                  <div key={lineIndex}>
+                  <div key={lineIndex} className="song-chord-line">
                     {line.map((word, wordIndex) => (
                       <span key={wordIndex}>
                         {isSinger || isAdmin
                           ? word.lyrics
                           : `${word.lyrics}${
-                              word.chords ? ` (${word.chords})` : ''
-                            }`}{' '}
+                              word.chords ? ` (${word.chords})` : ""
+                            }`}{" "}
                       </span>
                     ))}
                   </div>
@@ -170,7 +178,9 @@ function LivePage() {
               </div>
             )
           ) : (
-            <p>No lyrics available</p>
+            <>
+              {isFetchingSong ? <p>Loading song...</p> : <p>No lyrics found</p>}
+            </>
           )}
         </div>
       </div>

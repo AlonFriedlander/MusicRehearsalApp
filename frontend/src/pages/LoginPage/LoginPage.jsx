@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 
-function LoginPage() {
+function LoginPage({setIsLoading}) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -14,6 +14,7 @@ function LoginPage() {
     setError(null);
 
     try {
+      setIsLoading(true);
       const response = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/api/auth/login`,
         { username, password }
@@ -29,6 +30,9 @@ function LoginPage() {
       }
     } catch (error) {
       setError(error.response?.data?.message || 'Server error');
+    }
+    finally {
+      setIsLoading(false);
     }
   };
 

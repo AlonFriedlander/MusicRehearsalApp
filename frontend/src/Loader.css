@@ -1,0 +1,21 @@
+.loader-container {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .loader-svg {
+    margin: auto;
+    background: none;
+    display: block;
+    shape-rendering: auto;
+  }
+  
+  .loader-path {
+    fill: #1a1514;
+    stroke: none;
+  }
+  

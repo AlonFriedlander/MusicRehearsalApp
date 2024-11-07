@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
 import axios from 'axios';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './AdminPage.css';
 import useValidateToken from '../../hooks/useValidateToken';
+import './AdminPage.css';
 
 function AdminPage() {
   useValidateToken();
 
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
+
+  useValidateToken(true);
 
   const handleSearch = async (e) => {
     e.preventDefault();

@@ -23,6 +23,8 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model('User', userSchema);
+userSchema.index({ username: 1 }); // Index for faster queries
+
+const User = mongoose.model('User', userSchema)
 
 export default User;

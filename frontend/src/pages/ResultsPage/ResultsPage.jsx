@@ -10,6 +10,8 @@ function ResultsPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
 
+  useValidateToken(true);
+
   const handleSelectSong = async (song) => {
     try {
       const token = sessionStorage.getItem('token');
