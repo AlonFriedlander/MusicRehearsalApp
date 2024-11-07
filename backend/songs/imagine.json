@@ -1,27 +1,31 @@
-[
-    [
-        { "lyrics": "Imagine" },
-        { "lyrics": "there's", "chords": "C" },
-        { "lyrics": "no" },
-        { "lyrics": "heaven", "chords": "F" }
-    ],
-    [
-        { "lyrics": "It's", "chords": "C" },
-        { "lyrics": "easy" },
-        { "lyrics": "if" },
-        { "lyrics": "you", "chords": "Dm" },
-        { "lyrics": "try", "chords": "F" }
-    ],
-    [
-        { "lyrics": "No", "chords": "C" },
-        { "lyrics": "hell" },
-        { "lyrics": "below", "chords": "F" },
-        { "lyrics": "us" }
-    ],
-    [
-        { "lyrics": "Above", "chords": "C" },
-        { "lyrics": "us" },
-        { "lyrics": "only", "chords": "F" },
-        { "lyrics": "sky", "chords": "G" }
+{
+    "title": "Imagine",
+    "artist": "John Lennon",
+    "lyrics": [
+        [
+            { "lyrics": "Imagine" },
+            { "lyrics": "there's", "chords": "C" },
+            { "lyrics": "no" },
+            { "lyrics": "heaven", "chords": "F" }
+        ],
+        [
+            { "lyrics": "It's", "chords": "C" },
+            { "lyrics": "easy" },
+            { "lyrics": "if" },
+            { "lyrics": "you", "chords": "Dm" },
+            { "lyrics": "try", "chords": "F" }
+        ],
+        [
+            { "lyrics": "No", "chords": "C" },
+            { "lyrics": "hell" },
+            { "lyrics": "below", "chords": "F" },
+            { "lyrics": "us" }
+        ],
+        [
+            { "lyrics": "Above", "chords": "C" },
+            { "lyrics": "us" },
+            { "lyrics": "only", "chords": "F" },
+            { "lyrics": "sky", "chords": "G" }
+        ]
     ]
-]
+}

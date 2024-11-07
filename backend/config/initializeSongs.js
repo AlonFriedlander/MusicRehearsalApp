@@ -14,20 +14,31 @@ export const initializeSongs = async () => {
     const songFiles = fs.readdirSync(songsDir);
 
     for (const file of songFiles) {
-      const title = path.parse(file).name.replace('_', ' '); // Format title
+      const filePath = path.join(songsDir, file);
+      const songData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+
+      // Ensure the JSON data has both title and artist properties
+      if (!songData.title || !songData.artist) {
+        console.warn(`Skipping ${file} as it does not have a title or artist.`);
+        continue;
+      }
+
+      const title = songData.title;
+      const artist = songData.artist;
+
       const songExists = await Song.findOne({ title });
 
       if (!songExists) {
-        const filePath = path.join(songsDir, file);
-        const lyrics = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-
-        const newSong = new Song({ title, filename: file, lyrics });
+        const newSong = new Song({
+          title,
+          artist,
+          filename: file,
+          lyrics: songData.lyrics,
+        });
         await newSong.save();
-        console.log(`Song added to database: ${title}`);
+        console.log(`Song added to database: ${title} by ${artist}`);
       }
     }
-
-    console.log('All songs initialized successfully.');
   } catch (error) {
     console.error('Error initializing songs:', error);
   }

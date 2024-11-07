@@ -3,26 +3,23 @@ import bcrypt from 'bcryptjs';
 import colors from 'colors';
 import dotenv from 'dotenv';
 import User from './models/User.js';
-import Song from './models/Song.js'; // Ensure this is the correct path to your Song model
+import Song from './models/Song.js';
 
-// Load environment variables
 dotenv.config();
 
-// Connect to the database
 mongoose.connect(process.env.MONGO_URI);
 
 
 // Define user data
 const users = [
-  { username: 'alon', password: 'pass', role: 'admin' },
-  { username: 'guy', password: 'pass', role: 'user', instrument: 'vocals' },
-  { username: 'efrat', password: 'pass', role: 'user', instrument: 'bass' },
+  { username: 'alon', password: 'Password123', role: 'admin' },
+  { username: 'guy', password: 'Password123', role: 'user', instrument: 'vocals' },
+  { username: 'efrat', password: 'Password123', role: 'user', instrument: 'bass' },
 ];
 
 // Import data into the database
 const importData = async () => {
   try {
-    // Hash passwords and create users
     const hashedUsers = await Promise.all(
       users.map(async (user) => ({
         ...user,

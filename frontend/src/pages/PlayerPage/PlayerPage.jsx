@@ -2,28 +2,26 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import useValidateToken from '../../hooks/useValidateToken';
-import './PlayerPage.css'; // Import the CSS file
+import './PlayerPage.css';
 
 function PlayerPage() {
   const navigate = useNavigate();
-  const isValidToken = useValidateToken(); // Use the custom hook for token validation
+  const isValidToken = useValidateToken();
   const token = sessionStorage.getItem('token');
 
   useEffect(() => {
-    if (isValidToken === null) return; // Wait for token validation
+    if (isValidToken === null) return;
     if (!isValidToken) {
       navigate('/login');
       return;
     }
 
-    // Proceed with socket connection if token is valid
     const socket = io(`${process.env.REACT_APP_BACKEND_URL}/`, {
       extraHeaders: {
-        authorization: `Bearer ${token}`, // Send the token to the backend
+        authorization: `Bearer ${token}`,
       },
     });
 
-    // Socket event listeners
     socket.on('navigateToLivePage', (msg) => {
       console.log(
         'Received navigateToLivePage event, redirecting to live page...'
@@ -46,7 +44,6 @@ function PlayerPage() {
       navigate('/login');
     });
 
-    // Cleanup on component unmount
     return () => {
       socket.off('navigateToLivePage');
       socket.off('sessionEnded');

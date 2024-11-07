@@ -6,8 +6,8 @@ import './SignupPage.css';
 function SignupPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [instrument, setInstrument] = useState(''); // Set default to empty
-  const [errorMessage, setErrorMessage] = useState(''); // Add state for error message
+  const [instrument, setInstrument] = useState(''); 
+  const [errorMessage, setErrorMessage] = useState(''); 
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,11 +30,11 @@ function SignupPage() {
         signupData
       );
       console.log('Signup successful');
-      navigate('/login'); // Redirect to the login page after successful signup
+      navigate('/login');
     } catch (error) {
       const message = error.response?.data?.message || error.message;
       console.error('Signup error:', message);
-      setErrorMessage(message); // Set the error message to display it in the form
+      setErrorMessage(message); 
     }
   };
 

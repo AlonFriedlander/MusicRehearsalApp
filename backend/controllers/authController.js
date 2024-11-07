@@ -5,7 +5,17 @@ import User from '../models/User.js';
 export const register = async (req, res) => {
   const { username, password, instrument, role } = req.body;
 
+  // Password validation regex: At least 6 characters, one uppercase, one lowercase, and one number
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
+  
   try {
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        message:
+          'Password must be at least 6 characters long, include at least one uppercase letter, one lowercase letter, and one number.',
+      });
+    }
+
     if (role === 'admin') {
       const adminExists = await User.findOne({ role: 'admin' });
       if (adminExists)

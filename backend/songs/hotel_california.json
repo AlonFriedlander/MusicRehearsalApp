@@ -1,34 +1,38 @@
-[
-    [
-        { "lyrics": "On" },
-        { "lyrics": "a", "chords": "Bm" },
-        { "lyrics": "dark" },
-        { "lyrics": "desert", "chords": "F#" },
-        { "lyrics": "highway", "chords": "A" }
-    ],
-    [
-        { "lyrics": "Cool", "chords": "E" },
-        { "lyrics": "wind" },
-        { "lyrics": "in" },
-        { "lyrics": "my", "chords": "Bm" },
-        { "lyrics": "hair", "chords": "F#" }
-    ],
-    [
-        { "lyrics": "Warm" },
-        { "lyrics": "smell", "chords": "A" },
-        { "lyrics": "of" },
-        { "lyrics": "colitas", "chords": "E" },
-        { "lyrics": "rising", "chords": "Bm" },
-        { "lyrics": "up", "chords": "F#" },
-        { "lyrics": "through", "chords": "A" },
-        { "lyrics": "the", "chords": "E" },
-        { "lyrics": "air" }
-    ],
-    [
-        { "lyrics": "Up" },
-        { "lyrics": "ahead", "chords": "Bm" },
-        { "lyrics": "in" },
-        { "lyrics": "the", "chords": "F#" },
-        { "lyrics": "distance", "chords": "A" }
+{
+    "title": "Hotel California",
+    "artist": "Eagles",
+    "lyrics": [
+        [
+            { "lyrics": "On" },
+            { "lyrics": "a", "chords": "Bm" },
+            { "lyrics": "dark" },
+            { "lyrics": "desert", "chords": "F#" },
+            { "lyrics": "highway", "chords": "A" }
+        ],
+        [
+            { "lyrics": "Cool", "chords": "E" },
+            { "lyrics": "wind" },
+            { "lyrics": "in" },
+            { "lyrics": "my", "chords": "Bm" },
+            { "lyrics": "hair", "chords": "F#" }
+        ],
+        [
+            { "lyrics": "Warm" },
+            { "lyrics": "smell", "chords": "A" },
+            { "lyrics": "of" },
+            { "lyrics": "colitas", "chords": "E" },
+            { "lyrics": "rising", "chords": "Bm" },
+            { "lyrics": "up", "chords": "F#" },
+            { "lyrics": "through", "chords": "A" },
+            { "lyrics": "the", "chords": "E" },
+            { "lyrics": "air" }
+        ],
+        [
+            { "lyrics": "Up" },
+            { "lyrics": "ahead", "chords": "Bm" },
+            { "lyrics": "in" },
+            { "lyrics": "the", "chords": "F#" },
+            { "lyrics": "distance", "chords": "A" }
+        ]
     ]
-]
+}

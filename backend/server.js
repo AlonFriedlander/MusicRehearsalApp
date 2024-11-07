@@ -27,10 +27,21 @@ const io = new Server(server, {
 app.set('io', io);
 
 io.on('connection', (socket) => {
-  socket.on('disconnect', () => console.log(`User disconnected: ${socket.id}`));
+  socket.on('disconnect', (reason) => {
+    console.log(`User disconnected: ${socket.id}. Reason: ${reason}`);
+  });
+
+  socket.on('error', (error) => {
+    console.error(`Socket error on ${socket.id}:`, error);
+  });
 });
 
-connectDB().then(() => {
-  initializeSongs(); // Initialize songs after DB connection
-  server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-});
+connectDB()
+  .then(() => {
+    initializeSongs(); 
+    server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  })
+  .catch((error) => {
+    console.error('Failed to connect to the database:', error);
+    process.exit(1); 
+  });

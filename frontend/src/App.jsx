@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Layout } from './Layout';
+import { Layout } from './components/Layout';
 import AdminPage from './pages/AdminPage/AdminPage';
 import LivePage from './pages/LivePage/LivePage';
 import LoginPage from './pages/LoginPage/LoginPage';
