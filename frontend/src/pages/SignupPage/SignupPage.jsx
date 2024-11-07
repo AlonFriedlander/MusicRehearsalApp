@@ -6,8 +6,8 @@ import './SignupPage.css';
 function SignupPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [instrument, setInstrument] = useState(''); 
-  const [errorMessage, setErrorMessage] = useState(''); 
+  const [instrument, setInstrument] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -25,16 +25,21 @@ function SignupPage() {
     };
 
     try {
-      await axios.post(
+      const res = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/api/auth/register`,
         signupData
       );
+      console.log(res);
+      sessionStorage.setItem('token', res.data.token);
+      if (res.data.user) {
+        sessionStorage.setItem('user', JSON.stringify(res.data.user));
+      }
       console.log('Signup successful');
       navigate('/login');
     } catch (error) {
       const message = error.response?.data?.message || error.message;
       console.error('Signup error:', message);
-      setErrorMessage(message); 
+      setErrorMessage(message);
     }
   };
 
